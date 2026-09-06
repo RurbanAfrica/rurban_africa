@@ -95,7 +95,7 @@ const NAV_ITEMS = [
   },
   {
     label: "What We Do",
-    href: "/what-we-do",
+    href: "/programs",
     dropdown: [
       {
         group: "Programmes",

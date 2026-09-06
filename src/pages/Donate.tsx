@@ -7,11 +7,12 @@ import {
   ChevronRight, Sparkles, Building2, Smartphone,
   User, EyeOff, X, PartyPopper, Mail, Phone,
 } from "lucide-react";
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 
 /* ══════════════════════════════════════════════════════
    TYPES
 ══════════════════════════════════════════════════════ */
-type DonationType = "single" | "monthly";
+// type DonationType = "single" | "monthly";
 type PaymentTab   = "online" | "transfer";
 type OnlineMethod = "flutterwave";
 type Currency     = "ngn" | 'cad' | "usd" | "gbp";
@@ -96,8 +97,9 @@ const PAYMENT_LINKS: Record<OnlineMethod, Record<Currency, string>> = {
   flutterwave: {
     ngn: "https://flutterwave.com/donate/vh80d1qlcs7b",
     usd: "https://flutterwave.com/pay/mv89fpreobpz",
-    cad: "https://flutterwave.com/pay/epspyt3nmloo", //this need to be update with the appropriate link
+    cad: "https://flutterwave.com/pay/2zkyg6ndcr7x",
     gbp: "https://flutterwave.com/pay/72qvckxzdloe",
+    // '': "",
   },
 };
 
@@ -106,6 +108,29 @@ const STATS = [
   { value: "6",      label: "Communities Served" },
   { value: "0%",      label: "Admin Overhead" },
   { value: "100%",    label: "Transparency" },
+];
+
+const SEED_ITEMS = [
+  {
+    icon: "🏫",
+    title: "Education",
+    desc: "Scholarships, school supplies & rural learning hubs",
+  },
+  {
+    icon: "💧",
+    title: "Clean Water",
+    desc: "Borehole installations and water purification systems",
+  },
+  {
+    icon: "🌾",
+    title: "Food Security",
+    desc: "Smallholder farming support & agricultural cooperatives",
+  },
+  {
+    icon: "💡",
+    title: "Tech & Innovation",
+    desc: "Digital literacy centres for underserved communities",
+  },
 ];
 
 /* ══════════════════════════════════════════════════════
@@ -228,7 +253,7 @@ function SuccessDialog({
   donorMode: DonorMode; form: DonorForm;
   currency: Currency; amount: number;
 }) {
-  const sym = CURRENCIES[currency].symbol;
+  const sym = currency ? CURRENCIES[currency].symbol : null;
   const confettiItems = ["🌱", "🌍", "💛", "✨", "🎉", "💚", "🌟", "🫶"];
 
   useEffect(() => {
@@ -386,9 +411,11 @@ function SuccessDialog({
    MAIN PAGE
 ══════════════════════════════════════════════════════ */
 export default function DonatePage() {
-  const [donationType,    setDonationType]    = useState<DonationType>("single");
-  const [currency,        setCurrency]        = useState<Currency>("ngn");
-  const [selectedAmount,  setSelectedAmount]  = useState<number | null>(CURRENCIES.ngn.presets[3]);
+  // const [donationType,    setDonationType]    = useState<DonationType>("single");
+  const [currency,        setCurrency]        = useState<Currency>();
+  const currencySectionRef = useRef<HTMLDivElement>(null);
+  const [currencyError, setCurrencyError] = useState(false);
+  const [selectedAmount,  setSelectedAmount]  = useState<number | null>();
   const [customAmount,    setCustomAmount]    = useState("");
   const [paymentTab,      setPaymentTab]      = useState<PaymentTab>("online");
   const [onlineMethod,    setOnlineMethod]    = useState<OnlineMethod>("flutterwave");
@@ -399,11 +426,24 @@ export default function DonatePage() {
   const [currencyDir,     setCurrencyDir]     = useState(1);
   const [heroCount,       setHeroCount]       = useState(0);
   const countRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [status, setStatus] = useState<"idle" | "verifying" | "success" | "failed">("idle");
 
-  const sym         = CURRENCIES[currency].symbol;
-  const presets     = CURRENCIES[currency].presets;
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActive((prev) => (prev + 1) % SEED_ITEMS.length);
+    }, 4500);
+
+    return () => clearInterval(id);
+  }, []);
+
+  const selectedCurrency = currency ? CURRENCIES[currency] : null;
+
+  const sym         = selectedCurrency?.symbol ?? "";
+  const presets     = selectedCurrency?.presets ?? CURRENCIES.ngn.presets;
   const activeAmount = customAmount ? parseInt(customAmount) || 0 : selectedAmount || 0;
-  const impactText   = IMPACT_MAP[currency][selectedAmount || 0];
+  // const impactText   = IMPACT_MAP[currency][selectedAmount || 0];
   const bank         = BANK_DETAILS[currency];
 
   // Hero counter
@@ -418,6 +458,22 @@ export default function DonatePage() {
     return () => { if (countRef.current) clearInterval(countRef.current); };
   }, []);
 
+  const config = {
+    public_key: import.meta.env.VITE_FLW_PUBLIC_KEY,
+    tx_ref: `donation-${Date.now()}`,
+    amount: selectedAmount===null?Number(customAmount):selectedAmount,
+    currency,
+    payment_options: currency === "ngn" ? "card, ussd, mobilemoney" : "card",
+    customer: { email: form.email || 'Omehoduonyechukwuyem@gmail.com', phone_number: form.phone ?? "", name: form.name ?? '' },
+    customizations: {
+      title: "Rurban Africa Donation",
+      description: "Supporting rural-urban outreach",
+      logo: '/Afircan.png',
+    },
+  };
+
+  const handleFlutterPayment = useFlutterwave(config);
+
   // Reset amount when currency changes
   const handleCurrencyChange = (c: Currency) => {
     const currencies: Currency[] = ["ngn", 'cad', "usd", "gbp"];
@@ -426,6 +482,7 @@ export default function DonatePage() {
     setCurrencyDir(newIdx > oldIdx ? 1 : -1);
     setPrevCurrency(currency);
     setCurrency(c);
+    setCurrencyError(false);
     setSelectedAmount(CURRENCIES[c].presets[3]);
     setCustomAmount("");
     // Switch to online payment if transfer is not available for this currency
@@ -435,13 +492,44 @@ export default function DonatePage() {
   };
 
   const handleDonate = () => {
+    if (!currency) {
+      setCurrencyError(true);
+      currencySectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
     if (paymentTab === "online") {
-      const link =
-        PAYMENT_LINKS[onlineMethod][currency as Currency];
+      // const link =
+      //   PAYMENT_LINKS[onlineMethod][currency as Currency];
+      //
+      // console.log(link, 'link');
+      //
+      // window.open(`${link}?amount=${activeAmount}`, "_blank");
 
-      console.log(link, 'link');
+      console.log(Number(customAmount), selectedAmount, 'amount');
 
-      window.open(`${link}?amount=${activeAmount}`, "_blank");
+      handleFlutterPayment({
+        callback: async (response) => {
+          closePaymentModal();
+          setStatus("verifying");
+
+          try {
+            const res = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                transaction_id: response.transaction_id,
+                expected_amount: selectedAmount===null?Number(customAmount):selectedAmount,
+                expected_currency: currency,
+              }),
+            });
+            const data = await res.json();
+            setStatus(data.verified ? "success" : "failed");
+          } catch {
+            setStatus("failed");
+          }
+        },
+        onClose: () => {},
+      });
     }
     setShowDialog(true);
   };
@@ -480,8 +568,8 @@ export default function DonatePage() {
           <rect width="100%" height="100%" fill="url(#herogrid)" />
         </svg>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-14 py-24 w-full">
-          <div className="grid lg:grid-cols-[1fr_460px] gap-12 lg:gap-16 items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-14 py-20 w-full">
+          <div className="gap-12 lg:gap-16 items-center">
 
             {/* ── Hero Left ── */}
             <motion.div initial="hidden" animate="visible">
@@ -497,8 +585,8 @@ export default function DonatePage() {
                 className="text-5xl md:text-6xl lg:text-[76px] font-black text-white leading-[1.0] tracking-tight mb-6"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
               >
-                Your gift
-                <span className="block text-emerald-400 italic">changes</span>
+                Your gift{" "}
+                <span className="text-emerald-400 italic">changes {' '}</span>
                 everything.
               </motion.h1>
 
@@ -507,91 +595,21 @@ export default function DonatePage() {
               </motion.p>
 
               {/* Stats grid */}
-              <motion.div initial="hidden" animate="visible" className="grid grid-cols-2 gap-3 max-w-sm">
+              <motion.div initial="hidden" animate="visible" className="">
+                <div className="max-w-7xl mx-auto px-6 lg:px-14">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                 {STATS.map((s, i) => (
                   <motion.div key={i} custom={i} variants={statVariants}
-                    className="p-4 rounded-2xl bg-white/[0.05] border border-white/[0.08] backdrop-blur-sm">
-                    <p className="text-2xl font-black text-white mb-0.5" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    className="p-4 rounded-2xl bg-white/[0.05] border border-white/[0.08] backdrop-blur-sm text-center">
+                    <p className="text-4xl font-black text-white mb-0.5" style={{ fontFamily: "'Playfair Display', serif" }}>
                       {s.value === "12,400+" ? `${heroCount.toLocaleString()}+` : s.value}
                     </p>
                     <p className="text-[11px] text-emerald-100/45 font-medium leading-snug">{s.label}</p>
                   </motion.div>
                 ))}
+                  </div>
+                </div>
               </motion.div>
-            </motion.div>
-
-            {/* ── Hero Quick-Give Card ── */}
-            <motion.div variants={heroCardVariants} initial="hidden" animate="visible"
-              className="bg-[#F9FBFA] dark:bg-emerald-950 rounded-3xl p-8 shadow-2xl shadow-black/50 border border-white/10">
-
-              <p className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400 mb-1.5">Start Giving</p>
-              <h2 className="text-2xl font-black text-zinc-900 dark:text-white mb-6 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
-                How much would you like to give?
-              </h2>
-
-              {/* Donation type */}
-              <div className="flex gap-2 p-1 bg-zinc-100 dark:bg-emerald-950/50 rounded-2xl mb-4">
-                {(["single", "monthly"] as DonationType[]).map((t) => (
-                  <button key={t} onClick={() => setDonationType(t)}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${donationType === t ? "bg-[#064e3b] text-white shadow-md" : "text-zinc-500 dark:text-emerald-400/60 hover:text-zinc-700 dark:hover:text-emerald-300"}`}>
-                    {t === "single" ? <Globe size={14} /> : <Repeat2 size={14} />}
-                    {t === "single" ? "One-time" : "Monthly"}
-                  </button>
-                ))}
-              </div>
-
-              {/* Currency selector */}
-              <div className="flex gap-2 mb-4">
-                {(Object.keys(CURRENCIES) as Currency[]).map((c) => (
-                  <button key={c} onClick={() => handleCurrencyChange(c)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold border transition-all duration-200 ${currency === c ? "bg-[#064e3b] text-white border-[#064e3b] shadow-sm" : "border-zinc-200 dark:border-emerald-900/40 text-zinc-500 dark:text-emerald-400 hover:border-emerald-400"}`}>
-                    <span>{CURRENCIES[c].flag}</span>
-                    {CURRENCIES[c].label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Preset amounts with slide animation */}
-              <AnimatePresence mode="wait" custom={currencyDir}>
-                <motion.div key={currency} custom={currencyDir} variants={currencySlideVariants}
-                  initial="hidden" animate="visible" exit="exit"
-                  className="grid grid-cols-3 gap-2 mb-4">
-                  {presets.map((amt) => (
-                    <button key={amt} onClick={() => { setSelectedAmount(amt); setCustomAmount(""); }}
-                      className={`py-3 rounded-xl text-sm font-bold border transition-all duration-200 ${selectedAmount === amt && !customAmount ? "bg-[#064e3b] text-white border-[#064e3b] shadow-sm" : "border-zinc-200 dark:border-emerald-900/40 text-zinc-600 dark:text-emerald-300 hover:border-emerald-400"}`}>
-                      {sym}{amt.toLocaleString()}
-                    </button>
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-
-              <div className="relative mb-2">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-emerald-600 font-bold text-sm">{sym}</span>
-                <input type="number" placeholder="Custom amount"
-                  value={customAmount} onChange={(e) => { setCustomAmount(e.target.value); setSelectedAmount(null); }}
-                  className="w-full pl-8 pr-4 py-3.5 rounded-xl border border-zinc-200 dark:border-emerald-900/40 bg-transparent text-zinc-800 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-emerald-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400/40 transition"
-                />
-              </div>
-
-              <AnimatePresence>
-                {impactText && !customAmount && (
-                  <motion.div key={`${currency}-${selectedAmount}`} variants={impactVariants} initial="hidden" animate="visible" exit="exit"
-                    className="flex items-start gap-2 mt-2 px-3 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/30 overflow-hidden">
-                    <Sparkles size={13} className="text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
-                    <p className="text-[11px] text-emerald-700 dark:text-emerald-300 leading-snug">{impactText}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <a href="#donate-form">
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-                  className="mt-4 w-full flex items-center justify-between bg-amber-400 hover:bg-amber-300 text-white py-4 px-6 rounded-2xl font-black text-sm shadow-lg group transition-colors">
-                  <span>Proceed · {activeAmount > 0 ? `${sym}${activeAmount.toLocaleString()}` : "choose amount"}</span>
-                  <span className="bg-emerald-900 rounded-full p-1.5 group-hover:rotate-45 transition-transform duration-300">
-                    <ArrowUpRight size={15} strokeWidth={3} />
-                  </span>
-                </motion.button>
-              </a>
             </motion.div>
 
           </div>
@@ -646,15 +664,11 @@ export default function DonatePage() {
               </motion.p>
 
               {/* Programme cards */}
-              <div className="space-y-3 mb-12">
-                {[
-                  { icon: "🏫", title: "Education",      desc: "Scholarships, school supplies & rural learning hubs" },
-                  { icon: "💧", title: "Clean Water",    desc: "Borehole installations and water purification systems" },
-                  { icon: "🌾", title: "Food Security",  desc: "Smallholder farming support & agricultural cooperatives" },
-                  { icon: "💡", title: "Tech & Innovation", desc: "Digital literacy centres for underserved communities" },
-                ].map((item, i) => (
+
+              <div className="hidden md:block space-y-3 mb-12">
+                {SEED_ITEMS.map((item, i) => (
                   <motion.div key={i} custom={i} variants={fadeUpVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                    className="flex items-start gap-4 p-5 rounded-2xl border border-zinc-100 dark:border-emerald-900/30 bg-white dark:bg-white/[0.02] hover:border-emerald-200 dark:hover:border-emerald-800/60 hover:shadow-sm transition-all duration-300 group">
+                              className="flex items-start gap-4 p-5 rounded-2xl border border-zinc-100 dark:border-emerald-900/30 bg-white dark:bg-white/[0.02] hover:border-emerald-200 dark:hover:border-emerald-800/60 hover:shadow-sm transition-all duration-300 group">
                     <span className="text-2xl mt-0.5">{item.icon}</span>
                     <div>
                       <p className="font-black text-zinc-800 dark:text-white text-sm mb-0.5 group-hover:text-[#064e3b] dark:group-hover:text-emerald-400 transition-colors">{item.title}</p>
@@ -664,16 +678,44 @@ export default function DonatePage() {
                 ))}
               </div>
 
-              {/* Testimonial */}
-              <motion.blockquote custom={5} variants={fadeUpVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
-                className="border-l-4 border-[#064e3b] dark:border-emerald-500 pl-6 py-1">
-                <p className="text-zinc-700 dark:text-emerald-100/65 text-base italic leading-relaxed mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  "Because of Rurban Africa, my daughter can dream of becoming a doctor. Three years ago, she had no school to attend."
-                </p>
-                <cite className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-500 not-italic">
-                 , Amina B., Sokoto State
-                </cite>
-              </motion.blockquote>
+              <div className="md:hidden">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={active}
+                    initial={{ opacity: 0, x: 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -40 }}
+                    transition={{ duration: 0.45 }}
+                    className="flex items-start gap-4 rounded-2xl border border-zinc-100 bg-white p-5 dark:border-emerald-900/30 dark:bg-white/[0.02]"
+                  >
+                    <span className="text-2xl">{SEED_ITEMS[active].icon}</span>
+
+                    <div>
+                      <p className="mb-1 text-sm font-black text-zinc-800 dark:text-white">
+                        {SEED_ITEMS[active].title}
+                      </p>
+
+                      <p className="text-[13px] leading-relaxed text-zinc-500 dark:text-emerald-100/40">
+                        {SEED_ITEMS[active].desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+
+                <div className="mt-5 flex justify-center gap-2">
+                  {SEED_ITEMS.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActive(i)}
+                      className={`h-2 rounded-full transition-all ${
+                        active === i
+                          ? "w-6 bg-amber-400"
+                          : "w-2 bg-zinc-300 dark:bg-emerald-800"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
 
 
@@ -684,50 +726,71 @@ export default function DonatePage() {
               <div className="bg-white dark:bg-[#0a2318] rounded-3xl shadow-2xl shadow-zinc-200/90 dark:shadow-black/50 border border-zinc-100 dark:border-emerald-900/30 overflow-hidden">
 
                 {/* Panel header */}
-                <div className="relative overflow-hidden bg-[#064e3b] px-8 py-7">
+                <div className="relative overflow-hidden px-8 py-7 bg-white dark:bg-emerald-950 rounded-3xl border border-white/10">
                   <div className="absolute inset-0 opacity-[0.07]"
                     style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }}
                   />
                   <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full bg-emerald-400/10 blur-2xl pointer-events-none" />
-                  <p className="text-emerald-300/60 text-[10px] font-bold uppercase tracking-[0.25em] mb-1 relative z-10">Complete Your Gift</p>
-                  <h3 className="text-white text-xl font-black relative z-10" style={{ fontFamily: "'Playfair Display', serif" }}>
-                    Choose a payment method
-                  </h3>
+                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-400 mb-1.5">Start Giving</p>
+                  <h2 className="text-2xl font-black text-zinc-900 dark:text-white mb-6 leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    How much would you like to give?
+                  </h2>
                 </div>
 
-                <div className="p-7 space-y-5 dark:bg-emerald-950">
+
+
+                {/*/!* Donation type *!/*/}
+                {/*<div className="flex gap-2 p-1 bg-zinc-100 dark:bg-emerald-950/50 rounded-2xl mb-4">*/}
+                {/*  {(["single", "monthly"] as DonationType[]).map((t) => (*/}
+                {/*    <button key={t} onClick={() => setDonationType(t)}*/}
+                {/*            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${donationType === t ? "bg-[#064e3b] text-white shadow-md" : "text-zinc-500 dark:text-emerald-400/60 hover:text-zinc-700 dark:hover:text-emerald-300"}`}>*/}
+                {/*      {t === "single" ? <Globe size={14} /> : <Repeat2 size={14} />}*/}
+                {/*      {t === "single" ? "One-time" : "Monthly"}*/}
+                {/*    </button>*/}
+                {/*  ))}*/}
+                {/*</div>*/}
+
+                <div className="px-7 py-3 space-y-5 dark:bg-emerald-950">
 
                   {/* Currency + Amount recap */}
                   <div className="flex items-center justify-between pb-5 border-b border-zinc-100 dark:border-emerald-900/30">
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 dark:text-emerald-600 mb-1">Amount</p>
+                      {activeAmount ? <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 dark:text-emerald-600 mb-1">Amount</p>: ''}
                       <div className="flex items-baseline gap-2">
                         <p className="text-3xl font-black text-zinc-900 dark:text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
-                          {activeAmount > 0 ? `${sym}${activeAmount.toLocaleString()}` : `${sym}0`}
+                          {activeAmount > 0 ? `${sym}${activeAmount.toLocaleString()}` : <span className="text-xl font-black text-zinc-900 dark:text-white leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>
+                            Kindly select donation currency and amount
+                          </span>}
                         </p>
-                        <span className="text-xs font-bold text-zinc-400 dark:text-emerald-700 uppercase">{CURRENCIES[currency].label}</span>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 dark:text-emerald-600 mb-1">Frequency</p>
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${donationType === "monthly" ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300" : "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400"}`}>
-                        {donationType === "monthly" ? <Repeat2 size={11} /> : <Globe size={11} />}
-                        {donationType === "monthly" ? "Monthly" : "One-time"}
-                      </span>
                     </div>
                   </div>
 
                   {/* Currency selector */}
-                  <div>
+                  <div ref={currencySectionRef}>
                     <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-400 dark:text-emerald-600 mb-2">Currency</p>
-                    <div className="flex gap-2">
+                    <motion.div
+                      animate={currencyError ? { x: [0, -6, 6, -6, 6, 0] } : { x: 0 }}
+                      transition={{ duration: 0.4 }}
+                      className={`flex gap-2 rounded-2xl transition-all ${
+                        currencyError ? "ring-2 ring-red-400 ring-offset-2 ring-offset-white dark:ring-offset-[#041d14]" : ""
+                      }`}
+                    >
                       {(Object.keys(CURRENCIES) as Currency[]).map((c) => (
-                        <button key={c} onClick={() => handleCurrencyChange(c)}
-                          className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold border transition-all ${currency === c ? "bg-[#064e3b] text-white border-[#064e3b]" : "border-zinc-200 dark:border-emerald-900/40 text-zinc-500 dark:text-emerald-400 hover:border-emerald-400"}`}>
-                          <span>{CURRENCIES[c].flag}</span>{CURRENCIES[c].label}
+                        <button
+                          key={c}
+                          onClick={() => handleCurrencyChange(c)}
+                          className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold border transition-all ${
+                            currency === c
+                              ? "bg-[#064e3b] text-white border-[#064e3b]"
+                              : "border-zinc-200 dark:border-emerald-900/40 text-zinc-500 dark:text-emerald-400 hover:border-emerald-400"
+                          }`}
+                        >
+                          <span>{CURRENCIES[c].flag}</span>
+                          {CURRENCIES[c].label}
                         </button>
                       ))}
-                    </div>
+                    </motion.div>
                   </div>
 
                   {/* Quick amounts */}
@@ -749,24 +812,26 @@ export default function DonatePage() {
                   {/* Custom input */}
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-emerald-600 font-bold text-sm">{sym}</span>
-                    <input type="number" placeholder="Or type a custom amount"
+                    <input type="number" placeholder="Or type your Desired Amount"
                       value={customAmount} onChange={(e) => { setCustomAmount(e.target.value); setSelectedAmount(null); }}
                       className="w-full pl-8 pr-4 py-3 rounded-xl border border-zinc-200 dark:border-emerald-900/40 bg-zinc-50 dark:bg-emerald-950/30 text-zinc-800 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-emerald-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400/40 transition"
                     />
                   </div>
 
                   {/* ── PAYMENT TABS ── */}
-                  <div className="flex gap-1 p-1 bg-zinc-100 dark:bg-emerald-950/50 rounded-2xl">
-                    {([
-                      { id: "online",   label: "Pay Online",    icon: <Smartphone size={14} /> },
-                      ...(currency === "ngn" ? [{ id: "transfer", label: "Bank Transfer",  icon: <Building2 size={14} /> }] : []),
-                    ] as const).map((tab) => (
+                  {currency==='ngn'&&
+                    <div className="flex flex-1 gap-1 p-1 bg-zinc-100 dark:bg-emerald-950/50 rounded-2xl">
+                    {
+                      [{ id: "online",   label: "Pay Online",    icon: <Smartphone size={14} /> },{ id: "transfer", label: "Bank Transfer",  icon: <Building2 size={14} /> }]
+                    .map((tab) => (
+
                       <button key={tab.id} onClick={() => setPaymentTab(tab.id as PaymentTab)}
                         className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${paymentTab === tab.id ? "bg-[#064e3b] text-white shadow-md" : "text-zinc-500 dark:text-emerald-400/60 hover:text-zinc-800 dark:hover:text-emerald-300"}`}>
                         {tab.icon}{tab.label}
                       </button>
                     ))}
-                  </div>
+                    </div>
+                  }
 
                   {/* Tab content */}
                   <AnimatePresence mode="wait">

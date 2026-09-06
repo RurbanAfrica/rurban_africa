@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import {
   ArrowUpRight,
   MapPin,
@@ -124,6 +124,49 @@ const STEPS = [
   },
 ];
 
+const APPROACH = [
+  {
+    title: "Holistic",
+    description:
+      "Addressing spiritual, emotional, physical, and economic needs.",
+  },
+  {
+    title: "Relational",
+    description:
+      "Building genuine relationships rather than conducting one-off events.",
+  },
+  {
+    title: "Sustainable",
+    description:
+      "Focusing on discipleship that produces long-term fruit and multiplies impact.",
+  },
+  {
+    title: "Community-Oriented",
+    description:
+      "Partnering with local churches for follow-up and deeper spiritual growth while maintaining Rurban Africa’s independent identity as a development organization.",
+  },
+];
+
+const OUTCOMES = [
+  {
+    number: "01",
+    title: "People of Integrity & Character",
+    icon: "◈",
+  },
+  {
+    number: "02",
+    title: "Purpose-Driven Leaders",
+    icon: "✦",
+  },{
+    number: "03",
+    title: "Compassionate servants of their communities",
+    icon: "✦",
+  },{
+    number: "04",
+    title: "Hopeful citizens contributing to a rising Africa",
+    icon: "✦",
+  },
+];
 
 /* ── Highlighted body text ── */
 function HighBody({ text, keyword }: { text: string; keyword: string }) {
@@ -241,9 +284,17 @@ export default function GreatMission() {
   const statsView = useInView(statsRef, { once: true, margin: "-60px" });
   const quoteRef = useRef<HTMLDivElement>(null);
   const quoteView = useInView(quoteRef, { once: true, margin: "-60px" });
-  const MissionIcon = ABOUT_CONTENT.mission.icon;
-  const VisionIcon = ABOUT_CONTENT.vision.icon;
   const { mission, vision } = ABOUT_CONTENT;
+
+  const [activeApproach, setActiveApproach] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveApproach((prev) => (prev + 1) % APPROACH.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <main
@@ -265,7 +316,10 @@ export default function GreatMission() {
       {/* ══════════ Four REASONS ══════════ */}
       <section className="py-24">
         <div ref={sectionRef} className="max-w-7xl mx-auto px-6 lg:px-14">
-          <div className="mx-auto max-w-6xl grid gap-8 mb-16 lg:grid-cols-2 scroll-mt-32" id='mission'>
+          <div
+            className="mx-auto max-w-6xl grid gap-8 mb-16 lg:grid-cols-2 scroll-mt-32"
+            id="mission"
+          >
             {/* Mission */}
             <motion.article
               initial={{ opacity: 0, y: 20 }}
@@ -399,7 +453,7 @@ export default function GreatMission() {
             className="p-8"
           />
           {/*<ImageSlider/>*/}
-          <div className="text-center my-14 scroll-mt-32" id='corepillar'>
+          <div className="text-center my-14 scroll-mt-32" id="corepillar">
             <motion.h2
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -505,69 +559,149 @@ export default function GreatMission() {
         </div>
 
 
+        <div className="max-w-7xl mx-auto px-6 lg:px-14">
+          <div className="text-center my-6 scroll-mt-32" id="corepillar">
+            <motion.h2
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+              className="text-3xl md:text-4xl font-black text-zinc-900 dark:text-white mb-3"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            >
+              Our Approach
+            </motion.h2>
+          </div>
+          <div className="hidden md:grid md:grid-cols-2 gap-5">
+            {APPROACH.map((item, i) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group rounded-3xl border border-zinc-100
+                 bg-white p-7 dark:border-emerald-900/30
+                 dark:bg-white/[0.02]"
+              >
+              <span className="text-4xl font-black text-emerald-100 dark:text-emerald-900">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+
+                <h3 className="mt-6 text-xl font-black text-zinc-900 dark:text-white">
+                  {item.title}
+                </h3>
+
+                <p className="mt-3 text-sm leading-relaxed text-zinc-500 dark:text-emerald-100/50">
+                  {item.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="md:hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeApproach}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                className="min-h-[260px] rounded-3xl bg-[#064e3b] p-7 text-white"
+              >
+                <p className="text-sm font-black text-amber-400">
+                  {String(activeApproach + 1).padStart(2, "0")} /{" "}
+                  {String(APPROACH.length).padStart(2, "0")}
+                </p>
+
+                <h3
+                  className="mt-10 text-3xl font-black"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  {APPROACH[activeApproach].title}
+                </h3>
+
+                <p className="mt-4 text-sm leading-relaxed text-white/60">
+                  {APPROACH[activeApproach].description}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="mt-5 flex justify-center gap-2">
+              {APPROACH.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveApproach(i)}
+                  aria-label={`Show ${APPROACH[i].title}`}
+                  className={`h-2 rounded-full transition-all ${
+                    i === activeApproach
+                      ? "w-7 bg-amber-400"
+                      : "w-2 bg-zinc-300 dark:bg-emerald-900"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
       </section>
 
-      {/*<section className="py-20 px-6 lg:px-10">*/}
-      {/*  <div className="mx-auto max-w-7xl">*/}
-      {/*    <div className="max-w-2xl mb-12">*/}
-      {/*      <p className="text-sm font-black uppercase tracking-[0.25em] text-amber-500">*/}
-      {/*        Our Impact*/}
-      {/*      </p>*/}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-6">
 
-      {/*      <h2*/}
-      {/*        className="mt-3 text-4xl font-bold text-[#064e3b] dark:text-white"*/}
-      {/*        style={{ fontFamily: "'Playfair Display', serif" }}*/}
-      {/*      >*/}
-      {/*        Numbers That Tell Our Story*/}
-      {/*      </h2>*/}
-      {/*    </div>*/}
+          <div className="max-w-2xl mb-12">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-amber-400 mb-4">
+              The Great Mission
+            </p>
 
-      {/*    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">*/}
-      {/*      {IMPACT_STATS.map((stat, i) => {*/}
-      {/*        const Icon = stat.icon;*/}
+            <h2
+              className="text-3xl md:text-5xl font-black text-zinc-900 dark:text-white"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Our Commitment
+            </h2>
 
-      {/*        return (*/}
-      {/*          <motion.article*/}
-      {/*            key={stat.label}*/}
-      {/*            initial={{ opacity: 0, y: 24 }}*/}
-      {/*            whileInView={{ opacity: 1, y: 0 }}*/}
-      {/*            viewport={{ once: true, amount: 0.2 }}*/}
-      {/*            transition={{*/}
-      {/*              duration: 0.45,*/}
-      {/*              delay: i * 0.08,*/}
-      {/*            }}*/}
-      {/*            className="group rounded-3xl border border-zinc-100 dark:border-emerald-900/30 bg-white dark:bg-[#081d12] p-7 transition-all hover:-translate-y-1 hover:shadow-xl"*/}
-      {/*          >*/}
-      {/*            <div className="flex items-center justify-between mb-10">*/}
-      {/*              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400/10">*/}
-      {/*                <Icon className="text-amber-500" size={28} />*/}
-      {/*              </div>*/}
+            <p className="mt-5 text-zinc-500 dark:text-emerald-100/50 leading-relaxed">
+              Through The Great Mission, Rurban Africa is raising a new
+              generation of Africans who are not only skilled and educated,
+              but also:
+            </p>
+          </div>
 
-      {/*              <span className="text-xs uppercase tracking-[0.2em] text-zinc-400">*/}
-      {/*                Impact*/}
-      {/*              </span>*/}
-      {/*            </div>*/}
+          <div className="grid sm:grid-cols-2 gap-5">
+            {OUTCOMES.map((item) => (
+              <div
+                key={item.number}
+                className="group rounded-3xl border border-zinc-100
+                     dark:border-emerald-900/30
+                     bg-white dark:bg-white/[0.02]
+                     p-7 md:p-9 transition-all duration-300
+                     hover:-translate-y-1 hover:border-emerald-200
+                     dark:hover:border-emerald-800"
+              >
+                <div className="flex items-start justify-between">
+            <span className="text-4xl font-black text-emerald-100 dark:text-emerald-900">
+              {item.number}
+            </span>
 
-      {/*            <h3*/}
-      {/*              className="text-5xl font-black text-[#064e3b] dark:text-white"*/}
-      {/*              style={{ fontFamily: "'Playfair Display', serif" }}*/}
-      {/*            >*/}
-      {/*              {stat.value}*/}
-      {/*            </h3>*/}
+                  <span className="text-2xl text-amber-400">
+              {item.icon}
+            </span>
+                </div>
 
-      {/*            <p className="mt-4 text-lg font-bold text-zinc-900 dark:text-white">*/}
-      {/*              {stat.label}*/}
-      {/*            </p>*/}
+                <h3
+                  className="mt-10 text-xl md:text-2xl font-black
+                       text-zinc-900 dark:text-white"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  {item.title}
+                </h3>
+              </div>
+            ))}
+          </div>
 
-      {/*            <p className="mt-2 text-sm leading-relaxed text-zinc-500 dark:text-emerald-100/50">*/}
-      {/*              {stat.description}*/}
-      {/*            </p>*/}
-      {/*          </motion.article>*/}
-      {/*        );*/}
-      {/*      })}*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*</section>*/}
+        </div>
+      </section>
 
       {/* ══════════ PULL QUOTE / MANIFESTO ══════════ */}
       <section
@@ -606,13 +740,14 @@ export default function GreatMission() {
             className="text-lg md:text-xl font-black italic text-white leading-[1.25] mb-6"
             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Would you like to{' '}
+            Would you like to{" "}
             <span className="text-amber-400">
               volunteer, partner, or participate?
             </span>
             <span className="block mt-2 text-white/80">
               {" "}
-              Reach out to us or visit our offices to learn how you can be part of this transformative journey.
+              Reach out to us or visit our offices to learn how you can be part
+              of this transformative journey.
             </span>
           </motion.blockquote>
           <motion.p

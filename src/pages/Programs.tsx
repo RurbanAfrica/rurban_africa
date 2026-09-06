@@ -544,7 +544,7 @@ export default function Programs() {
         title="Our"
         accentWord="Programmes"
         description="From Pledge Notebooks to Dream Hubs, every Rurban Africa programme is designed around a single conviction: that where you are born should not determine how far you go."
-        crumbs={[{ label: "What We Do", to: "/what-we-do" }, { label: "Programmes" }]}
+        crumbs={[{ label: "What We Do", to: "/programsrogramso" }, { label: "Programmes" }]}
       />
 
       {/* ══ STATS STRIP ══ */}
