@@ -73,7 +73,7 @@ const NAV_ITEMS = [
       {
         group: "Our People",
         items: [
-          { label: "Board of Trustees", href: "/team#trustees",  icon: <Building2 size={14} />, desc: "Governance & leadership" },
+          // { label: "Board of Trustees", href: "/team#trustees",  icon: <Building2 size={14} />, desc: "Governance & leadership" },
           { label: "Management Team",   href: "/team#management",icon: <Users size={14} />,     desc: "Operational leaders" },
           { label: "Advisory Board",    href: "/team#advisory",  icon: <UserCheck size={14} />, desc: "Strategic advisors" },
         ],

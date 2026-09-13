@@ -61,42 +61,42 @@ interface Section {
 const PH = "/placeholder.svg";
 
 const SECTIONS: Section[] = [
-  {
-    id: "trustees",
-    label: "Board of Trustees",
-    title: "Board of",
-    accentWord: "Trustees",
-    description: "Our Board of Trustees provides strategic oversight, accountability, and long-term direction for Rurban Africa. They are the guardians of our mission and values.",
-    cols: 2,
-    members: [
-      {
-        id: "alvin",
-        name: "Omehoduonye C. Alvin",
-        role: "Executive Director / Trustee",
-        img: "/alvin_new.jpeg",
-        location: "Lagos & Delta, Nigeria",
-        bio: "Alvin is a passionate advocate for inclusive African growth and a proud product of one of Nigeria's rural communities. He has spent years visiting villages, engaging with residents, and deepening his understanding of the vital yet often overlooked relationship between rural/peri-urban communities and urban centres. He firmly believes that for Africa to truly rise, rural and peri-urban communities must not be left behind. As a qualified lawyer with expertise in Corporate/Commercial, Entertainment, Clean Energy, and Technology Law, Alvin brings sharp strategic insight and real-world experience to nonprofit leadership. Driven by the conviction of One Africa. Two Worlds. One Future., he founded Rurban Africa to bridge divides through education, youth empowerment, teacher development, scholarships, and community transformation.",
-        quote: "No child's dream should be limited by their birthplace.",
-        socials: [
-          { label: "LinkedIn", href: "https://www.linkedin.com/in/omehoduonye-c-alvin-aicmc-hrc-078492194", target: "_blank", icon: <LinkedInIcon /> },
-          { label: "Email",    href: "mailto:info@rurbanafrica.org", target: "_blank", icon: <MailIcon /> },
-        ],
-      },
-      {
-        id: "haggai",
-        name: "Ozuman Haggai E.",
-        role: "Trustee",
-        img: '/haggai.jpeg',
-        location: "Abuja, Nigeria",
-        bio: "Ozumah Haggai E. is a graduate of History and International Studies from the Federal University of Oye, Ekiti State. He is passionate about education and the rise of Africa. Having spent his early days in the rural communities, he believes proper attention should be given to the rural and peri-urban communities in order to erase the invisible line and have one united Africa. To him, children's destiny should not be determined by their geographical location.",
-        quote: "Every community deserves a champion. Rurban Africa is that champion.",
-        socials: [
-          { label: "LinkedIn", href: "#", target: "_blank", icon: <LinkedInIcon /> },
-          { label: "Email",    href: "#", target: "_blank", icon: <MailIcon /> },
-        ],
-      },
-    ],
-  },
+  // {
+  //   id: "trustees",
+  //   label: "Board of Trustees",
+  //   title: "Board of",
+  //   accentWord: "Trustees",
+  //   description: "Our Board of Trustees provides strategic oversight, accountability, and long-term direction for Rurban Africa. They are the guardians of our mission and values.",
+  //   cols: 2,
+  //   members: [
+  //     {
+  //       id: "alvin",
+  //       name: "Omehoduonye C. Alvin",
+  //       role: "Executive Director / Trustee",
+  //       img: "/alvin_new.jpeg",
+  //       location: "Lagos & Delta, Nigeria",
+  //       bio: "Alvin is a passionate advocate for inclusive African growth and a proud product of one of Nigeria's rural communities. He has spent years visiting villages, engaging with residents, and deepening his understanding of the vital yet often overlooked relationship between rural/peri-urban communities and urban centres. He firmly believes that for Africa to truly rise, rural and peri-urban communities must not be left behind. As a qualified lawyer with expertise in Corporate/Commercial, Entertainment, Clean Energy, and Technology Law, Alvin brings sharp strategic insight and real-world experience to nonprofit leadership. Driven by the conviction of One Africa. Two Worlds. One Future., he founded Rurban Africa to bridge divides through education, youth empowerment, teacher development, scholarships, and community transformation.",
+  //       quote: "No child's dream should be limited by their birthplace.",
+  //       socials: [
+  //         { label: "LinkedIn", href: "https://www.linkedin.com/in/omehoduonye-c-alvin-aicmc-hrc-078492194", target: "_blank", icon: <LinkedInIcon /> },
+  //         { label: "Email",    href: "mailto:info@rurbanafrica.org", target: "_blank", icon: <MailIcon /> },
+  //       ],
+  //     },
+  //     {
+  //       id: "haggai",
+  //       name: "Ozuman Haggai E.",
+  //       role: "Trustee",
+  //       img: '/haggai.jpeg',
+  //       location: "Abuja, Nigeria",
+  //       bio: "Ozumah Haggai E. is a graduate of History and International Studies from the Federal University of Oye, Ekiti State. He is passionate about education and the rise of Africa. Having spent his early days in the rural communities, he believes proper attention should be given to the rural and peri-urban communities in order to erase the invisible line and have one united Africa. To him, children's destiny should not be determined by their geographical location.",
+  //       quote: "Every community deserves a champion. Rurban Africa is that champion.",
+  //       socials: [
+  //         { label: "LinkedIn", href: "#", target: "_blank", icon: <LinkedInIcon /> },
+  //         { label: "Email",    href: "#", target: "_blank", icon: <MailIcon /> },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     id: "management",
     label: "Management Team",
@@ -107,11 +107,11 @@ const SECTIONS: Section[] = [
     members: [
       {
         id: "mgmt-1",
-        name: "Omehoduonye C. Alvin",
+        name: "Omehoduonye C. A. God'sway",
         role: "Executive Director",
         img: "/alvin_new.jpeg",
         location: "Lagos & Delta, Nigeria",
-        bio: "Alvin is a passionate advocate for inclusive African growth and a proud product of one of Nigeria's rural communities. He has spent years visiting villages, engaging with residents, and deepening his understanding of the vital yet often overlooked relationship between rural/peri-urban communities and urban centres. He firmly believes that for Africa to truly rise, rural and peri-urban communities must not be left behind. As a qualified lawyer with expertise in Corporate/Commercial, Entertainment, Clean Energy, and Technology Law, Alvin brings sharp strategic insight and real-world experience to nonprofit leadership. Driven by the conviction of One Africa. Two Worlds. One Future., he founded Rurban Africa to bridge divides through education, youth empowerment, teacher development, scholarships, and community transformation.",
+        bio: "God'sway is a passionate advocate for inclusive African growth and a proud product of one of Nigeria's rural communities. He has spent years visiting villages, engaging with residents, and deepening his understanding of the vital yet often overlooked relationship between rural/peri-urban communities and urban centres. He firmly believes that for Africa to truly rise, rural and peri-urban communities must not be left behind. As a qualified lawyer, God'sway brings a sharp strategic insight and real-world experience to nonprofit leadership. Driven by the conviction of One Africa. Two Worlds. One Future., he founded Rurban Africa through a divine opening to bridge divides through the gospel of Jesus Christ, education, youth empowerment, teacher development, scholarships, and community transformation.",
         quote: "No child's dream should be limited by their birthplace.",
         socials: [
           { label: "Facebook", href: "#", target: "_blank", icon: <FacebookIcon /> },

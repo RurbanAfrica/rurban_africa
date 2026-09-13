@@ -208,7 +208,7 @@ export default function MisVis() {
                     {activeTab === "mission" ? "Communities Reached" : "Target by 2030"}
                   </p>
                   <p className="text-2xl font-black text-zinc-900 dark:text-white">
-                    {activeTab === "mission" ? "12,400+" : "100 Hubs"}
+                    {activeTab === "mission" ? "6+" : "100 Hubs"}
                   </p>
                 </motion.div>
               </AnimatePresence>

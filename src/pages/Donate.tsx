@@ -602,7 +602,7 @@ export default function DonatePage() {
                   <motion.div key={i} custom={i} variants={statVariants}
                     className="p-4 rounded-2xl bg-white/[0.05] border border-white/[0.08] backdrop-blur-sm text-center">
                     <p className="text-4xl font-black text-white mb-0.5" style={{ fontFamily: "'Playfair Display', serif" }}>
-                      {s.value === "12,400+" ? `${heroCount.toLocaleString()}+` : s.value}
+                      {s.value === "6+" ? `${heroCount.toLocaleString()}+` : s.value}
                     </p>
                     <p className="text-[11px] text-emerald-100/45 font-medium leading-snug">{s.label}</p>
                   </motion.div>
