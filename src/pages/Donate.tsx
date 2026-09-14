@@ -106,7 +106,7 @@ const PAYMENT_LINKS: Record<OnlineMethod, Record<Currency, string>> = {
 const STATS = [
   { value: "1,950+", label: "Lives Impacted" },
   { value: "6",      label: "Communities Served" },
-  { value: "0%",      label: "Admin Overhead" },
+  // { value: "0%",      label: "Admin Overhead" },
   { value: "100%",    label: "Transparency" },
 ];
 
@@ -549,10 +549,10 @@ export default function DonatePage() {
       {/* ════════════════════════════════════════
           SUCCESS DIALOG
       ════════════════════════════════════════ */}
-      <SuccessDialog
-        open={showDialog} onClose={() => setShowDialog(false)}
-        donorMode={donorMode} form={form} currency={currency} amount={activeAmount}
-      />
+      {/*<SuccessDialog*/}
+      {/*  open={showDialog} onClose={() => setShowDialog(false)}*/}
+      {/*  donorMode={donorMode} form={form} currency={currency} amount={activeAmount}*/}
+      {/*/>*/}
 
       {/* ════════════════════════════════════════
           HERO
@@ -660,7 +660,7 @@ export default function DonatePage() {
               </motion.p>
               <motion.p custom={3} variants={fadeUpVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
                 className="text-zinc-400 dark:text-emerald-100/35 leading-relaxed text-sm max-w-lg mb-10">
-                We maintain zero percent administrative overhead. Every kobo, cent, and penny you give is deployed directly to the communities you're lifting.
+               Every kobo, cent, and penny you give is deployed directly to the communities you're lifting.
               </motion.p>
 
               {/* Programme cards */}
@@ -978,10 +978,10 @@ export default function DonatePage() {
             The Africa we dream of
             <span className="block italic text-amber-400"> starts with you.</span>
           </motion.h2>
-          <motion.p custom={2} variants={fadeUpVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="text-emerald-100/50 text-base leading-relaxed max-w-lg mx-auto mb-10">
-            Whether it's ₦500, $5, or £5, your gift is proof that human beings still care for one another. Thank you for being part of this.
-          </motion.p>
+          {/*<motion.p custom={2} variants={fadeUpVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}*/}
+          {/*  className="text-emerald-100/50 text-base leading-relaxed max-w-lg mx-auto mb-10">*/}
+          {/*  Whether it's ₦500, $5, or £5, your gift is proof that human beings still care for one another. Thank you for being part of this.*/}
+          {/*</motion.p>*/}
           <motion.a custom={3} variants={fadeUpVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}
             href="#donate-form"
             className="inline-flex items-center gap-3 bg-amber-400 hover:bg-amber-300 text-white px-8 py-4 rounded-full font-black text-sm group transition-colors shadow-xl shadow-black/20">
