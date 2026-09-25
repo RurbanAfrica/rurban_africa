@@ -22,7 +22,7 @@ const spotlightItems: SpotlightItem[] = [
     description:
       "Rurban Africa joyfully commenced THE GREAT MISSION across six schools in five rural communities.",
     extra:
-      "See how Rurban Africa transformed Africa Day into a powerful movement of education, leadership, hygiene, and hope.",
+      "",
     link: "/blogs/africa-day-2026-great-mission",
   },
   {
@@ -32,9 +32,9 @@ const spotlightItems: SpotlightItem[] = [
     img:
       "/uniform-news-2.jpg" ,
     description:
-      "Rurban Africa joyfully commenced THE GREAT MISSION across six schools in five rural communities.",
+      "The simplest support can remove the biggest barriers to learning",
     extra:
-      "See how Rurban Africa transformed Africa Day into a powerful movement of education, leadership, hygiene, and hope.",
+      "",
     link: "/blogs/africa-day-2026-uniform-mission",
   },
   {

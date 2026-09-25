@@ -28,7 +28,7 @@ const stagger = {
 };
 
 const stats = [
-  { value: "1,950+", label: "Children Reached", icon: Users },
+  { value: "2,450+", label: "Children / Youth Reached", icon: Users },
   { value: "8", label: "Active Communities ", icon: Globe },
   { value: "11", label: "Partner Schools", icon: HandHeart },
   { value: "4+", label: "Programs Running", icon: BookOpen },
