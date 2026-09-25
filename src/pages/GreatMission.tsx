@@ -277,11 +277,6 @@ export default function GreatMission() {
   const stepsRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
-  const stepsInView = useInView(stepsRef, { once: true, margin: "-60px" });
-  const heroRef = useRef<HTMLDivElement>(null);
-  const heroView = useInView(heroRef, { once: true });
-  const statsRef = useRef<HTMLDivElement>(null);
-  const statsView = useInView(statsRef, { once: true, margin: "-60px" });
   const quoteRef = useRef<HTMLDivElement>(null);
   const quoteView = useInView(quoteRef, { once: true, margin: "-60px" });
   const { mission, vision } = ABOUT_CONTENT;

@@ -217,7 +217,7 @@ function MusicPlayer() {
 ══════════════════════════════════════════════════ */
 export default function DreamHubs() {
   return (
-    <section className="relative py-24 md:py-32 bg-[#F9FBFA] dark:bg-[#041d14] transition-colors duration-700 overflow-hidden">
+    <section className="relative py-24 md:py-16 bg-[#F9FBFA] dark:bg-[#041d14] transition-colors duration-700 overflow-hidden">
 
       {/* Ambient glow */}
       <div className="absolute top-1/2 right-0 -z-10 w-96 h-96 bg-emerald-300/10 dark:bg-emerald-400/5 blur-3xl rounded-full translate-x-1/3 -translate-y-1/2 pointer-events-none" />
@@ -239,7 +239,7 @@ export default function DreamHubs() {
         </motion.div>
 
         {/* Main grid */}
-        <div className="flex flex-col lg:grid lg:grid-cols-[340px_1fr] gap-6 items-stretch">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_340px] gap-6 items-stretch">
 
           {/* LEFT: Foundation Song card */}
           <motion.div
@@ -268,10 +268,13 @@ export default function DreamHubs() {
               >
                 "Amina Lele"
               </h3>
-              <p className="text-emerald-100/65 text-[14px] leading-relaxed">
+              <p className="text-emerald-50/70 text-lg lg:text-xl leading-relaxed font-medium mb-8" >
                 We have adopted the song <span className="text-amber-400 font-semibold italic">"Amina Lele"</span>, a Congolese praise and thanksgiving song, as our official Foundation song. It is a song of praise and thanksgiving to God, celebrating His goodness, power, protection, and blessings in everyday life.
               </p>
             </div>
+
+            {/* Music Player */}
+            <MusicPlayer />
 
             <div className="mt-auto w-full pt-4 border-t border-white/8 text-center lg:text-left">
               <p className="text-emerald-100/40 text-[12px] italic leading-relaxed">
@@ -293,14 +296,12 @@ export default function DreamHubs() {
                 Dream Hubs Initiative
               </p>
               <p
-                className="text-emerald-50/70 text-lg lg:text-xl leading-relaxed font-medium mb-8"
+                className="text-emerald-100/65 text-[14px] leading-relaxed"
                 style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
               >
                 Our Dream Hubs are innovative, community-driven centers designed to bridge the gap between rural roots and urban opportunities. These hubs serve as vibrant centers for learning, creativity, and empowerment in underserved rural and peri-urban areas across Africa.
               </p>
 
-              {/* Music Player */}
-              <MusicPlayer />
             </div>
 
             {/* Decorative bottom row */}

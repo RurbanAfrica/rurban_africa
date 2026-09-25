@@ -29,8 +29,8 @@ const stagger = {
 
 const stats = [
   { value: "1,950+", label: "Children Reached", icon: Users },
-  { value: "6", label: "Communities Served", icon: Globe },
-  { value: "100+", label: "Volunteers", icon: HandHeart },
+  { value: "8", label: "Active Communities ", icon: Globe },
+  { value: "11", label: "Partner Schools", icon: HandHeart },
   { value: "4+", label: "Programs Running", icon: BookOpen },
 ];
 
@@ -67,7 +67,7 @@ const Index = () => {
 
       </div>
 
-      <section className="relative overflow-hidden bg-white py-24 dark:bg-gradient-to-b dark:from-[#064e3b] dark:to-[#064e3b]">
+      <section className="relative overflow-hidden bg-white py-14 dark:bg-gradient-to-b dark:from-[#064e3b] dark:to-[#064e3b]">
 
 
       <div className="container relative mx-auto px-6">

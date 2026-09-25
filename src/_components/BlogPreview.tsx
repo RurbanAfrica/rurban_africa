@@ -153,8 +153,8 @@ export default function BlogPreview() {
   }, [advance]);
 
   const featured  = BLOG_POSTS[featuredIndex];
-  // The 2 sidebar posts: skip the featured one, take next 2
-  const sidebarPosts = BLOG_POSTS.filter((_, i) => i !== featuredIndex).slice(0, 2);
+  // The 2 sidebar posts: skip the featured one, take next 2 most recent posts based on id field
+  const sidebarPosts = BLOG_POSTS.filter((_, i) => i !== featuredIndex).sort((a, b) => b.id - a.id).slice(0, 2);
 
   return (
     <section className="relative py-24 md:py-32 bg-[#F9FBFA] dark:bg-[#041d14] transition-colors duration-700 overflow-hidden">

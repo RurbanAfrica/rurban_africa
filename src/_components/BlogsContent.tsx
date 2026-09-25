@@ -115,8 +115,8 @@ export default function BlogsContent({ filter = "All" }: { filter?: string }) {
   const [page, setPage] = useState(1);
 
   const filtered = filter === "All"
-    ? BLOG_POSTS
-    : BLOG_POSTS.filter((p) => p.category === filter || p.tag === filter);
+    ? BLOG_POSTS.sort((a, b) => b.id - a.id)
+    : BLOG_POSTS.filter((p) => p.category === filter || p.tag === filter).sort((a, b) => b.id - a.id);
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const start      = (page - 1) * PER_PAGE;

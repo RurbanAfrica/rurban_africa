@@ -326,6 +326,10 @@ function ProseBlock({
   }
 
   if (block.type === "paragraph") {
+    const parts = block.highlight
+      ? block.text.split(block.highlight)
+      : [block.text];
+
     return (
       <motion.p
         initial={{ opacity: 0, y: 10 }}
@@ -334,7 +338,17 @@ function ProseBlock({
         transition={{ duration: 0.5, delay: 0.04 }}
         className="text-stone-600 dark:text-stone-300 text-[16px] leading-[1.85]"
       >
-        {block.text}
+        {parts.map((part, index) => (
+          <span key={index}>
+          {part}
+
+            {block.highlight && index < parts.length - 1 && (
+              <span className="text-amber-500 dark:text-amber-400 font-semibold">
+              {block.highlight}
+            </span>
+            )}
+        </span>
+        ))}
       </motion.p>
     );
   }
@@ -370,6 +384,29 @@ function ProseBlock({
         transition={{ duration: 0.6 }}
       >
         <ImageGrid srcs={postImages} onOpen={onOpenLightbox} />
+      </motion.div>
+    );
+  }
+  if (block.type === "list") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.04 }}
+        className="space-y-5 mb-8"
+      >
+        <ul className="space-y-3 mb-6 pl-1">
+          {block.item?.map((item, i) => (
+            <li
+              key={i}
+              className="flex items-start gap-3 text-zinc-600 dark:text-emerald-100/60 text-[15px] leading-relaxed"
+            >
+              <span className="mt-[7px] w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+              {item}
+            </li>
+          ))}
+        </ul>
       </motion.div>
     );
   }

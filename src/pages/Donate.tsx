@@ -105,7 +105,7 @@ const PAYMENT_LINKS: Record<OnlineMethod, Record<Currency, string>> = {
 
 const STATS = [
   { value: "1,950+", label: "Lives Impacted" },
-  { value: "6",      label: "Communities Served" },
+  { value: "8",      label: "Active Communities" },
   // { value: "0%",      label: "Admin Overhead" },
   { value: "100%",    label: "Transparency" },
 ];

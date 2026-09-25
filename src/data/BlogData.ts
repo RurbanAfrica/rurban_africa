@@ -1,11 +1,12 @@
 // data/BlogData.ts
 // Content sourced verbatim from School_visits.docx
 
-export type ProseParagraph = { type: "paragraph"; text: string };
+export type ProseParagraph = { type: "paragraph"; text: string; highlight?: string };
 export type ProseQuote     = { type: "quote";     text: string };
+export type ProseList    = { type: "list"; item: string[] };
 export type ProseImages    = { type: "images";    srcs: string[] };
 export type ProseHeading   = { type: "heading";   text: string; id: string };
-export type ProseSection   = ProseParagraph | ProseQuote | ProseImages | ProseHeading;
+export type ProseSection   = ProseParagraph | ProseQuote | ProseList | ProseImages | ProseHeading;
 
 export interface BlogPost {
   id: number;
@@ -23,7 +24,6 @@ export interface BlogPost {
 }
 
 export const BLOG_POSTS: BlogPost[] = [
-
   // ── 01 ────────────────────────────────────────────────────
   {
     id: 1,
@@ -300,6 +300,184 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         type: "quote",
         text: "Rurban Africa: One Africa, Two Worlds, One Future. Africa is rising, and I am rising with it.",
+      },
+    ],
+  },
+  {
+    id: 6,
+    slug: "africa-day-2026-great-mission",
+    category: "Outreach",
+    tag: "Education",
+    title:
+      "Rurban Africa Launches THE GREAT MISSION Across Six Rural Schools in September 2026",
+    excerpt: "This September, Rurban Africa joyfully commenced THE GREAT MISSION across six schools in six rural communities.",
+    img: "/great-miss-news-6.jpg",
+    date: "2026",
+    readTime: "5 min read",
+    location: "Delta State",
+    images: [
+      "/great-miss-news-8.jpg",
+      "/great-miss-news-7.jpg",
+      "/great-miss-news-6.jpg",
+      "/great-miss-news-5.jpg",
+      "/great-miss-news-4.jpg",
+      "/great-miss-news-3.jpg",
+      "/great-miss-news-2.jpg",
+      "/great-miss-news-1.jpg",
+    ],
+    content: [
+      {
+        type: "paragraph",
+        highlight: "THE GREAT MISSION",
+        text: "This September, Rurban Africa joyfully commenced THE GREAT MISSION across six schools in six rural communities. ",
+      },
+      {
+        type: "paragraph",
+        highlight: "Discovering and Realising My Destiny",
+        text: "What began as a deliberate step of faith has already opened hearts, shifted destinies, and planted seeds of purpose that will outlast a single generation. The first monthly students’ guide and pamphlet introduced the powerful theme Discovering and Realising My Destiny. Students received Jesus Christ with open hearts and made a clear, joyful decision to live the rest of their lives for Him. These great young minds are now set on a new path anchored in Christ, purpose, and hope.",
+      },
+      {
+        type: "heading",
+        id: "bridge-communities",
+        text: "Bridging communities. Expanding possibilities.",
+      },
+      {
+        type: "paragraph",
+        text: "Rurban Africa exists to bridge the rural-urban divide so that no child’s dream is limited by location. The organisation works with the conviction that rural and peri-urban communities form the heart of Africa’s potential. These areas preserve cultural heritage and hold vast untapped talent. Yet, they often face the starkest inequalities in education, infrastructure, and opportunity. Rurban Africa chooses these communities not out of charity, but because true transformation starts where both the need and the potential are greatest.",
+      },
+      {
+        type: "paragraph",
+        text: "The Great Mission is not a one-off event but a sustained journey of discipleship, character formation, and academic excellence. Every student reached through the programme will continue to receive the Rurban Africa monthly students’ guide. This resource is carefully designed to help them:",
+      },
+      {
+        type: "list",
+        ordered: true,
+        item: [
+          "Follow Jesus dearly and in truth",
+          "Grow strong in their walk with God",
+          "Deepen and sustain the impact of development programmes",
+          "Excel in their academics",
+          "Succeed in every life endeavour",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "They are being raised to take their place at the topmost top and shine as lights above the nations, just as God has destined them.",
+      },
+      {
+        type: "images",
+        srcs: [
+          "/great-miss-news-8.jpg",
+          "/great-miss-news-7.jpg",
+          "/great-miss-news-6.jpg",
+          "/great-miss-news-5.jpg",
+          "/great-miss-news-4.jpg",
+          "/great-miss-news-3.jpg",
+          "/great-miss-news-2.jpg",
+          "/great-miss-news-1.jpg",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Each session with the students ends with a powerful corporate Confession that seals the truth of their new identity and future:",
+      },
+      {
+        type: "quote",
+        text: "I am a child of Destiny. God has a great purpose and a bright future for my life. His angels go before me to clear the way and guard me everywhere I go. I am extraordinary because the living God is with me, helping me, strengthening me and guiding me. I am rising with Africa. I will study hard, dream big, and fulfill my God-given purpose. No matter the challenge, I will not fear, for God's presence is ever with me, and I will shine for His glory.",
+      },
+      {
+        type: "paragraph",
+        text: "This confession is a daily declaration that rewrites the internal narrative of children who might otherwise grow up believing that geography determines destiny. By speaking it aloud together, students begin to own a different story, one in which they are chosen, protected, empowered, and commissioned.",
+      },
+      {
+        type: "paragraph",
+        text: "The launch in September marks only the beginning. Across the six schools, young people who once saw limited horizons are now learning to see themselves as carriers of destiny. Teachers have witnessed the shift of greater attentiveness in class, renewed hunger for learning, and a quiet confidence that comes from knowing one is not alone. ",
+      },
+      {
+        type: "paragraph",
+        text: "The monthly guides will keep the conversation alive long after the initial visit, reinforcing biblical truth, practical wisdom, and a call to excellence in every area of life.",
+      },
+      {
+        type: "paragraph",
+        text: "Rurban Africa’s work rests on a simple but radical conviction: when rural hearts thrive with pride, purpose, and possibility, the whole of Africa rises together. Investing in these children creates ripple effects of stronger local economies, reduced poverty, and a generation of leaders who will one day bridge villages and cities with integrity and vision.",
+      },
+
+      {
+        type: "paragraph",
+        text: "We give all the glory, honour, and praise to our Lord Jesus Christ for this beautiful moment and for the privilege of serving the next generation in rural communities. The Great Mission has begun, and we are expectant of even greater testimonies in the days ahead. Testimonies of transformed lives, academic breakthroughs, families restored, and young people rising as lights across Africa. ",
+      },
+      {
+        type: "quote",
+        text: "To God be the glory.",
+      },
+    ],
+  },
+  {
+    id: 7,
+    slug: "africa-day-2026-uniform-mission",
+    category: "Outreach",
+    tag: "Education",
+    title:
+      "Rurban Africa Provides Uniforms to Thirty-Six (36) Rural School Students",
+    excerpt: "",
+    img: "/uniform-news-2.jpg",
+    date: "2026",
+    readTime: "3 min read",
+    location: "Delta State",
+    images: [
+      "/uniform-news-1.jpg",
+      "/uniform-news-2.jpg",
+      "/uniform-news-3.jpg",
+      "/uniform-news-4.jpg",
+      "/uniform-news-5.jpg",
+    ],
+    content: [
+      {
+        type: "paragraph",
+        text: "At Rurban Africa, we believe that sometimes the simplest support can remove the biggest barriers to learning. Recently, our team provided school uniforms to 36 children at Awunfa Primary School in Ekwuoma Community, Delta State. The impact was a visible shift in attendance, confidence, and daily experience at school.",
+      },
+      {
+        type: "paragraph",
+        text: "For many families, the cost of a proper school uniform is a heavy burden. Without one, children can feel excluded, face pressure from peers or school rules, or simply stay away. By supplying uniforms to these 36 children, we directly addressed that barrier.",
+      },
+      {
+        type: "paragraph",
+        text: 'The results have been encouraging. Absenteeism has decreased. Children who previously hesitated or stayed home are now present more regularly. The visible difference of arriving in uniform has reduced feelings of exclusion and the quiet pressure that comes from not fitting in. In its place, we are seeing greater equality among classmates, a stronger sense of belonging, and a more focused atmosphere for learning.',
+      },
+      {
+        type: "images",
+        srcs: [
+          "/uniform-news-1.jpg",
+          "/uniform-news-2.jpg",
+          "/uniform-news-3.jpg",
+          "/uniform-news-4.jpg",
+          "/uniform-news-5.jpg",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: 'Uniform provision does more than get children through the school gate. It helps create an environment where pupils can concentrate on lessons rather than on what they are wearing or how they are perceived. Teachers have noted improved participation and a lighter mood among the supported pupils.',
+      },
+      {
+        type: "paragraph",
+        text: 'Many of the children themselves express a sense of pride and happiness. Wearing the same uniform as their peers has brought a feeling of inclusion and reduced the social strain that can distract from learning.',
+      },
+      {
+        type: "paragraph",
+        text: 'Supporting 36 pupils may seem modest, yet each uniform represents a child who can now attend with greater confidence, consistency, and dream of a greater Africa.',
+      },
+      {
+        type: "paragraph",
+        text: 'This initiative reflects Rurban Africa’s practical approach: identify concrete obstacles that keep children from learning, and address them with targeted, respectful support. Uniforms are one tool among others we use to strengthen access, equity, and the daily reality of schooling in the communities we work with.',
+        highlight: 'identify concrete obstacles that keep children from learning, and address them with targeted, respectful support.',
+      },
+      {
+        type: "paragraph",
+        text: 'We remain committed to removing barriers that prevent children from thriving in school. The experience with these 36 pupils at Awunfa Primary School reinforces that practical provisions, when delivered thoughtfully, can reduce exclusion, ease pressure, and open space for belonging, focus, and happiness in the classroom.'
+      },
+      {
+        type: "quote",
+        text: "We are forever grateful to God Almighty for all the impacts and progress",
       },
     ],
   },

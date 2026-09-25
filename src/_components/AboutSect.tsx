@@ -22,7 +22,7 @@ const AboutSect = () => {
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden  dark:bg-[#064e3b]/50 bg-background py-24 md:py-32 lg:py-40`}
+      className={`relative overflow-hidden  dark:bg-[#064e3b]/50 bg-background py-24 md:py-14 lg:py-14`}
     >
             {/* Dot grid */}
       <div

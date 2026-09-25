@@ -61,7 +61,7 @@ export default function MisVis() {
   const current = content[activeTab];
 
   return (
-    <section className="py-28 bg-[#F9FBFA] dark:bg-[#041d14] transition-colors duration-700">
+    <section className="py-14 bg-[#F9FBFA] dark:bg-[#041d14] transition-colors duration-700">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
 
@@ -205,10 +205,10 @@ export default function MisVis() {
                   className="absolute bottom-8 left-6 bg-white/90 dark:bg-[#041d14]/90 backdrop-blur-md border border-emerald-100 dark:border-emerald-800/40 rounded-2xl px-5 py-3.5 shadow-lg"
                 >
                   <p className="text-[10px] uppercase tracking-widest font-bold text-emerald-600 dark:text-emerald-400 mb-0.5">
-                    {activeTab === "mission" ? "Communities Reached" : "Target by 2030"}
+                    {activeTab === "mission" ? "Active Communities" : "Target by 2030"}
                   </p>
                   <p className="text-2xl font-black text-zinc-900 dark:text-white">
-                    {activeTab === "mission" ? "6+" : "100 Hubs"}
+                    {activeTab === "mission" ? "8+" : "100 Hubs"}
                   </p>
                 </motion.div>
               </AnimatePresence>
