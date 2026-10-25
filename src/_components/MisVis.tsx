@@ -195,23 +195,27 @@ export default function MisVis() {
               <div className="absolute bottom-0 left-0 right-0 h-24 rounded-b-3xl bg-gradient-to-t from-[#F9FBFA] dark:from-[#041d14] to-transparent pointer-events-none" />
 
               {/* Floating stat badge */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab + "-badge"}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 6 }}
-                  transition={{ delay: 0.4, duration: 0.4 }}
-                  className="absolute bottom-8 left-6 bg-white/90 dark:bg-[#041d14]/90 backdrop-blur-md border border-emerald-100 dark:border-emerald-800/40 rounded-2xl px-5 py-3.5 shadow-lg"
-                >
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-emerald-600 dark:text-emerald-400 mb-0.5">
-                    {activeTab === "mission" ? "Active Communities" : "Target by 2030"}
-                  </p>
-                  <p className="text-2xl font-black text-zinc-900 dark:text-white">
-                    {activeTab === "mission" ? "8+" : "100 Hubs"}
-                  </p>
-                </motion.div>
-              </AnimatePresence>
+              {
+                activeTab === 'mission' &&
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeTab + "-badge"}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ delay: 0.4, duration: 0.4 }}
+                    className="absolute bottom-8 left-6 bg-white/90 dark:bg-[#041d14]/90 backdrop-blur-md border border-emerald-100 dark:border-emerald-800/40 rounded-2xl px-5 py-3.5 shadow-lg"
+                  >
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-emerald-600 dark:text-emerald-400 mb-0.5">
+                      {activeTab === "mission" ? "Active Communities" : ""}
+                    </p>
+                    <p className="text-2xl font-black text-zinc-900 dark:text-white">
+                      {activeTab === "mission" ? "8+" : ""}
+                    </p>
+                  </motion.div>
+                </AnimatePresence>
+              }
+
             </div>
           </div>
 

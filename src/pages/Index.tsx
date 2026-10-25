@@ -70,55 +70,60 @@ const Index = () => {
       <section className="relative overflow-hidden bg-white py-14 dark:bg-gradient-to-b dark:from-[#064e3b] dark:to-[#064e3b]">
 
 
-      <div className="container relative mx-auto px-6">
-        <motion.div
-          // variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {stats.map((stat) => (
-            <motion.div
-              key={stat.label}
-              // variants={itemVariants}
-              whileHover={{ y: -5 }}
-              className="group relative flex flex-col items-center justify-center rounded-[2.5rem] border border-emerald-100 bg-white/50 p-10 transition-all duration-500 hover:bg-white dark:border-white/5 dark:bg-emerald-950/10 dark:hover:bg-emerald-950/20"
-            >
-              {/* Subtle Glow Effect on Hover */}
-              <div className="absolute inset-0 -z-10 bg-gradient-to-br from-emerald-500/0 to-emerald-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-5" />
+        <div className="container relative mx-auto px-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-4 gap-2 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4"
+          >
+            {stats.map((stat) => (
+              <motion.div
+                key={stat.label}
+                whileHover={{ y: -5 }}
+                className="group relative flex min-w-0 flex-col items-center justify-center rounded-2xl border border-emerald-100 bg-white/50 p-10 transition-all duration-500 hover:bg-white sm:rounded-[2.5rem] sm:p-10 dark:border-white/5 dark:bg-emerald-950/10 dark:hover:bg-emerald-950/20"
+              >
+                {/* Subtle Glow Effect on Hover */}
+                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-emerald-500/0 to-emerald-500/0 opacity-0 transition-opacity duration-500 group-hover:opacity-5" />
 
-              <div className="relative mb-6">
                 {/* Icon Circle */}
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 transition-colors duration-500 group-hover:bg-emerald-600 group-hover:text-white dark:bg-emerald-800/30 dark:text-emerald-400">
-                  <stat.icon size={28} strokeWidth={1.5} />
+                <div className="relative mb-6">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 transition-colors duration-500 group-hover:bg-emerald-600 group-hover:text-white sm:h-10 sm:w-10 sm:rounded-2xl dark:bg-emerald-800/30 dark:text-emerald-400">
+                    <stat.icon
+                      size={20}
+                      strokeWidth={1.5}
+                      className="sm:h-7 sm:w-7"
+                    />
+                  </div>
+
+                  {/* Floating particle animation */}
+                  <motion.div
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-amber-400 opacity-0 transition-opacity group-hover:opacity-100 sm:-right-2 sm:-top-2 sm:h-3 sm:w-3"
+                  />
                 </div>
 
-                {/* Floating particle animation */}
-                <motion.div
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -right-2 -top-2 h-3 w-3 rounded-full bg-amber-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                />
-              </div>
+                <div className="min-w-0 text-center">
+                  <motion.h3 className="text-xl font-black tracking-tighter text-zinc-900 sm:text-4xl lg:text-5xl dark:text-white">
+                    {stat.value}
+                  </motion.h3>
 
-              <div className="text-center">
-                <motion.h3
-                  className="text-4xl lg:text-5xl font-black tracking-tighter text-zinc-900 dark:text-white"
-                >
-                  {stat.value}
-                </motion.h3>
-                <p className="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400 group-hover:text-emerald-600 dark:text-emerald-500/60 transition-colors">
-                  {stat.label}
-                </p>
-              </div>
+                  <p className="mt-1 text-[7px] font-bold uppercase leading-tight tracking-[0.08em] text-zinc-400 transition-colors group-hover:text-emerald-600 sm:mt-2 sm:text-xs sm:tracking-[0.2em] dark:text-emerald-500/60">
+                    {stat.label}
+                  </p>
+                </div>
 
-              {/* Bottom Line Detail */}
-              <div className="absolute bottom-4 left-1/2 h-1 w-0 -translate-x-1/2 rounded-full bg-emerald-500/20 transition-all duration-500 group-hover:w-12" />
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
+                {/* Bottom Line Detail */}
+                <div className="absolute bottom-2 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-emerald-500/20 transition-all duration-500 group-hover:w-8 sm:bottom-4 sm:h-1 sm:group-hover:w-12" />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
     </section>
 
       {/* About Teaser */}

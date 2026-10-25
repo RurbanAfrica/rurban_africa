@@ -22,7 +22,7 @@ const AboutSect = () => {
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden  dark:bg-[#064e3b]/50 bg-background py-24 md:py-14 lg:py-14`}
+      className={`relative overflow-hidden  dark:bg-[#064e3b]/50 bg-background py-14 md:py-14 lg:py-14`}
     >
             {/* Dot grid */}
       <div
@@ -148,9 +148,11 @@ const AboutSect = () => {
                 { n: "1950+",  l: "Lives Touched" },
                 { n: "Pan‑African", l: "Non‑profit" },
               ].map((s, i) => (
-                <div key={i} className="flex flex-col items-center gap-1 px-2 text-center">
-                  <span className={`text-lg font-black leading-none `}>{s.n}</span>
-                  <span className={`text-[11px] leading-tight `}>{s.l}</span>
+                <div key={i} className="flex min-w-0 flex-1 flex-col items-center justify-center gap-1 px-2 text-center">
+                  <span className={`font-black leading-none ${i === 2 ? "text-[12px] sm:text-lg md:text-lg" : "text-lg"}`}>
+                    {s.n}
+                  </span>
+                  <span className="whitespace-nowrap text-[11px] leading-tight">{s.l}</span>
                 </div>
               ))}
             </motion.div>
